@@ -117,9 +117,9 @@
         // Função para ligar/desligar dispositivos
         function toggleDevice(device, action) {
             const ipMap = {
-                'ventilador': '192.168.1.100',
-                'luz': '192.168.4.3',
-                'tomada': '192.168.1.200'
+                'ventilador': '192.168.4.100',
+                'luz': '192.168.4.150',
+                'tomada': '192.168.4.200'
             };
 
             const url = `http://${ipMap[device]}/${action}${device.charAt(0).toUpperCase() + device.slice(1)}`;
@@ -139,9 +139,9 @@
         // Função para obter o status do dispositivo
         function getStatus(device) {
             const ipMap = {
-                'ventilador': '192.168.1.100',
-                'luz': '192.168.4.3',
-                'tomada': '192.168.1.200'
+                'ventilador': '192.168.4.100',
+                'luz': '192.168.4.150',
+                'tomada': '192.168.4.200'
             };
 
             const url = `http://${ipMap[device]}/status`;
