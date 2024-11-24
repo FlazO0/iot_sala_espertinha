@@ -1,12 +1,27 @@
 #include <WiFi.h>
-#include <HTTPClient.h>
+#include <WebServer.h>
 
 const char *ssid = "ProjetoX";  // Nome da rede Wi-Fi criada pela ESP Central
 const char *password = "eu_assisto_xvideos_pae";  // Senha da rede Wi-Fi criada pela ESP Central
-const char *serverName = "http://192.168.4.1";  // IP da ESP Central (padrão para ESP32 no modo AP)
+
+WebServer server(80);  // Servidor HTTP
+
+// Pino para controlar o ventilador via relé
+const int luzPin = 23;
 
 void setup() {
   Serial.begin(115200);
+
+
+  // Definindo IP estático
+  IPAddress local_IP(192, 168, 4, 150);  // IP fixo desejado (mude conforme sua rede)
+  IPAddress gateway(192, 168, 4, 1);     // Gateway da sua rede (geralmente o roteador)
+  IPAddress subnet(255, 255, 255, 0);    // Máscara de sub-rede (geralmente 255.255.255.0)
+
+  // Configurando IP estático
+  if (!WiFi.config(local_IP, gateway, subnet)) {
+    Serial.println("Falha ao configurar o IP estático.");
+  }
 
   // Conecta-se à rede Wi-Fi criada pela ESP Central
   WiFi.begin(ssid, password);
@@ -17,34 +32,34 @@ void setup() {
     Serial.println("Conectando ao Wi-Fi...");
   }
   Serial.println("Conectado ao Wi-Fi");
+
+  // Configura o pino da luz
+  pinMode(luzPin, OUTPUT);
+  digitalWrite(luzPin, LOW);  // Desliga a luz inicialmente
+
+  // Rota para ligar a luz
+  server.on("/ligarVentilador", HTTP_GET, []() {
+    Serial.println("Ligar luz.");
+    digitalWrite(luzPin, HIGH);  // Liga a luz
+    server.send(200, "text/plain", "Luz Ligada");
+  });
+
+  // Rota para desligar a luz
+  server.on("/desligarLuz", HTTP_GET, []() {
+    Serial.println("Desligar luz.");
+    digitalWrite(luzPin, LOW);  // Desliga a luz
+    server.send(200, "text/plain", "Luz Desligada");
+  });
+
+  server.on("/statusLuz", HTTP_GET, []() {
+    String status = (digitalRead(luzPin) == HIGH) ? "Ligado" : "Desligado";
+    server.send(200, "text/plain", "Status da Luz: " + status);
+  });
+
+  // Inicia o servidor
+  server.begin();
 }
 
 void loop() {
-  HTTPClient http;
-
-  // Comando para ligar o LED
-  http.begin(serverName + String("/led/on"));
-  int httpCode = http.GET();
-  
-  if (httpCode > 0) {
-    Serial.println("Comando para ligar o LED enviado com sucesso");
-  } else {
-    Serial.println("Erro ao enviar comando para ligar o LED");
-  }
-  http.end();
-
-  delay(5000);  // Espera 5 segundos antes de enviar o próximo comando
-
-  // Comando para desligar o LED
-  http.begin(serverName + String("/led/off"));
-  httpCode = http.GET();
-  
-  if (httpCode > 0) {
-    Serial.println("Comando para desligar o LED enviado com sucesso");
-  } else {
-    Serial.println("Erro ao enviar comando para desligar o LED");
-  }
-  http.end();
-
-  delay(5000);  // Espera 5 segundos antes de repetir os comandos
+  server.handleClient();  // Processa as requisições HTTP
 }
