@@ -20,7 +20,7 @@ void setup() {
   server.on("/ligarVentilador", HTTP_GET, []() {
     Serial.println("Comando para ligar o ventilador enviado.");
     HTTPClient http;
-    http.begin("http://192.168.4.2/ligarVentilador");  // IP da ESP Auxiliar 1 (ventilador)
+    http.begin("http://192.168.1.100/ligarVentilador");  // IP da ESP Auxiliar 1 (ventilador)
     int httpCode = http.GET();
     if (httpCode == 200) {
       Serial.println("Ventilador ligado com sucesso.");
@@ -36,7 +36,7 @@ void setup() {
   server.on("/desligarVentilador", HTTP_GET, []() {
     Serial.println("Comando para desligar o ventilador enviado.");
     HTTPClient http;
-    http.begin("http://192.168.4.2/desligarVentilador");  // IP da ESP Auxiliar 1 (ventilador)
+    http.begin("http://192.168.1.100/desligarVentilador");  // IP da ESP Auxiliar 1 (ventilador)
     int httpCode = http.GET();
     if (httpCode == 200) {
       Serial.println("Ventilador desligado com sucesso.");
