@@ -144,7 +144,7 @@
                 'tomada': '192.168.4.200'
             };
 
-            const url = `http://${ipMap[device]}/status`;
+            const url = `http://${ipMap[device]}/status${device.charAt(0).toUpperCase() + device.slice(1)}`;
 
             fetch(url)
                 .then(response => response.text())
