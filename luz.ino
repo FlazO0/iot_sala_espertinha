@@ -38,7 +38,7 @@ void setup() {
   digitalWrite(luzPin, LOW);  // Desliga a luz inicialmente
 
   // Rota para ligar a luz
-  server.on("/ligarVentilador", HTTP_GET, []() {
+  server.on("/ligarLuz", HTTP_GET, []() {
     Serial.println("Ligar luz.");
     digitalWrite(luzPin, HIGH);  // Liga a luz
     server.send(200, "text/plain", "Luz Ligada");
