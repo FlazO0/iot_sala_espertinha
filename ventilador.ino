@@ -14,8 +14,8 @@ void setup() {
 
 
   // Definindo IP estático
-  IPAddress local_IP(192, 168, 1, 100);  // IP fixo desejado (mude conforme sua rede)
-  IPAddress gateway(192, 168, 1, 1);     // Gateway da sua rede (geralmente o roteador)
+  IPAddress local_IP(192, 168, 4, 100);  // IP fixo desejado (mude conforme sua rede)
+  IPAddress gateway(192, 168, 4, 1);     // Gateway da sua rede (geralmente o roteador)
   IPAddress subnet(255, 255, 255, 0);    // Máscara de sub-rede (geralmente 255.255.255.0)
 
   // Configurando IP estático
